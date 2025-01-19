@@ -12,6 +12,7 @@
              xmlns:localization="clr-namespace:NETworkManager.Localization.Resources;assembly=NETworkManager.Localization"
              xmlns:settings="clr-namespace:NETworkManager.Settings;assembly=NETworkManager.Settings"
              xmlns:dialogs="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+             xmlns:profiles="clr-namespace:NETworkManager.Profiles;assembly=NETworkManager.Profiles"
              dialogs:DialogParticipation.Register="{Binding}"
              mc:Ignorable="d" d:DataContext="{d:DesignInstance viewModels:PingMonitorHostViewModel}">
     <UserControl.Resources>
@@ -78,7 +79,8 @@
                                     IsDefault="{Binding Path=IsRunning, Converter={StaticResource ResourceKey=BooleanReverseConverter}}"
                                     IsCancel="{Binding Path=IsRunning}">
                                 <Button.Resources>
-                                    <Style TargetType="{x:Type TypeName=Button}" BasedOn="{StaticResource ResourceKey=ImageWithTextButton}">
+                                    <Style TargetType="{x:Type TypeName=Button}"
+                                           BasedOn="{StaticResource ResourceKey=ImageWithTextButton}">
                                         <Setter Property="IsEnabled" Value="True" />
                                         <Style.Triggers>
                                             <DataTrigger
@@ -156,7 +158,7 @@
                                    Visibility="{Binding Path=IsStatusMessageDisplayed, Converter={StaticResource ResourceKey=BooleanToVisibilityCollapsedConverter}}"
                                    Style="{DynamicResource ResourceKey=StatusMessageTextBlock}" Margin="0,10,0,0" />
                     </Grid>
-                    <ScrollViewer Grid.Column="0" Grid.Row="2" Style="{StaticResource ResourceKey=DefaultScrollViewer}"
+                    <ScrollViewer Grid.Column="0" Grid.Row="2"
                                   HorizontalScrollBarVisibility="Auto">
                         <ListView ItemsSource="{Binding Path=HostsView}"
                                   SelectedItem="{Binding Path=SelectedHost}"
@@ -181,58 +183,63 @@
                                 </ContextMenu>
                             </ListView.ContextMenu>
                             <ListBox.GroupStyle>
-                            <GroupStyle>
-                                <GroupStyle.ContainerStyle>
-                                    <Style TargetType="{x:Type TypeName=GroupItem}">
-                                        <Setter Property="Template">
-                                            <Setter.Value>
-                                                <ControlTemplate>
-                                                    <Expander IsExpanded="True"
-                                                              Style="{StaticResource ResourceKey=DefaultExpander}">
-                                                        <Expander.Header>
-                                                            <Grid>
-                                                                <Grid.ColumnDefinitions>
-                                                                    <ColumnDefinition Width="*" />
-                                                                    <ColumnDefinition Width="10" />
-                                                                    <ColumnDefinition Width="Auto" />
-                                                                </Grid.ColumnDefinitions>
-                                                                <TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding Path=(CollectionViewGroup.Name)}"
-                                                                           Style="{DynamicResource ResourceKey=HeaderTextBlock}" />
-                                                                <Button Grid.Column="2" Grid.Row="0"
-                                                                        HorizontalAlignment="Right"
-                                                                        Command="{Binding Path=DataContext.CloseGroupCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TypeName=ListView}}}" 
-                                                                        CommandParameter="{Binding Path=(CollectionViewGroup.Name)}"
-                                                                        Style="{StaticResource ResourceKey=CleanButton}"
-                                                                        ToolTip="{x:Static Member=localization:Strings.CloseGroup}">
-                                                                    <Rectangle Width="16" Height="16">
-                                                                        <Rectangle.OpacityMask>
-                                                                            <VisualBrush Stretch="Fill" Visual="{iconPacks:Material Kind=WindowClose}" />
-                                                                        </Rectangle.OpacityMask>
-                                                                        <Rectangle.Style>
-                                                                            <Style TargetType="{x:Type TypeName=Rectangle}">
-                                                                                <Setter Property="Fill" Value="{DynamicResource ResourceKey=MahApps.Brushes.Gray3}" />
-                                                                                <Style.Triggers>
-                                                                                    <DataTrigger
-                                                                                        Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TypeName=Button}}, Path=IsMouseOver}"
-                                                                                        Value="True">
-                                                                                        <Setter Property="Fill" Value="Red" />
-                                                                                    </DataTrigger>
-                                                                                </Style.Triggers>
-                                                                            </Style>
-                                                                        </Rectangle.Style>
-                                                                    </Rectangle>
-                                                                </Button>
-                                                            </Grid>
-                                                        </Expander.Header>
-                                                        <ItemsPresenter />
-                                                    </Expander>
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Style>
-                                </GroupStyle.ContainerStyle>
-                            </GroupStyle>
-                        </ListBox.GroupStyle>
+                                <GroupStyle>
+                                    <GroupStyle.ContainerStyle>
+                                        <Style TargetType="{x:Type TypeName=GroupItem}">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate>
+                                                        <Expander IsExpanded="True"
+                                                                  Style="{StaticResource ResourceKey=DefaultExpander}">
+                                                            <Expander.Header>
+                                                                <Grid>
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="*" />
+                                                                        <ColumnDefinition Width="10" />
+                                                                        <ColumnDefinition Width="Auto" />
+                                                                    </Grid.ColumnDefinitions>
+                                                                    <TextBlock Grid.Column="0" Grid.Row="0"
+                                                                               Text="{Binding Path=(CollectionViewGroup.Name)}"
+                                                                               Style="{DynamicResource ResourceKey=HeaderTextBlock}" />
+                                                                    <Button Grid.Column="2" Grid.Row="0"
+                                                                            HorizontalAlignment="Right"
+                                                                            Command="{Binding Path=DataContext.CloseGroupCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TypeName=ListView}}}"
+                                                                            CommandParameter="{Binding Path=(CollectionViewGroup.Name)}"
+                                                                            Style="{StaticResource ResourceKey=CleanButton}"
+                                                                            ToolTip="{x:Static Member=localization:Strings.CloseGroup}">
+                                                                        <Rectangle Width="16" Height="16">
+                                                                            <Rectangle.OpacityMask>
+                                                                                <VisualBrush Stretch="Fill"
+                                                                                    Visual="{iconPacks:Material Kind=WindowClose}" />
+                                                                            </Rectangle.OpacityMask>
+                                                                            <Rectangle.Style>
+                                                                                <Style
+                                                                                    TargetType="{x:Type TypeName=Rectangle}">
+                                                                                    <Setter Property="Fill"
+                                                                                        Value="{DynamicResource ResourceKey=MahApps.Brushes.Gray3}" />
+                                                                                    <Style.Triggers>
+                                                                                        <DataTrigger
+                                                                                            Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TypeName=Button}}, Path=IsMouseOver}"
+                                                                                            Value="True">
+                                                                                            <Setter Property="Fill"
+                                                                                                Value="Red" />
+                                                                                        </DataTrigger>
+                                                                                    </Style.Triggers>
+                                                                                </Style>
+                                                                            </Rectangle.Style>
+                                                                        </Rectangle>
+                                                                    </Button>
+                                                                </Grid>
+                                                            </Expander.Header>
+                                                            <ItemsPresenter />
+                                                        </Expander>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </GroupStyle.ContainerStyle>
+                                </GroupStyle>
+                            </ListBox.GroupStyle>
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="{x:Type TypeName=ListViewItem}"
                                        BasedOn="{StaticResource ResourceKey=MahApps.Styles.ListViewItem}">
@@ -317,10 +324,12 @@
                                 </Rectangle.OpacityMask>
                                 <Rectangle.Style>
                                     <Style TargetType="{x:Type TypeName=Rectangle}">
-                                        <Setter Property="Fill" Value="{DynamicResource ResourceKey=MahApps.Brushes.Gray3}" />
+                                        <Setter Property="Fill"
+                                                Value="{DynamicResource ResourceKey=MahApps.Brushes.Gray3}" />
                                         <Style.Triggers>
                                             <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Fill" Value="{DynamicResource ResourceKey=MahApps.Brushes.Gray5}" />
+                                                <Setter Property="Fill"
+                                                        Value="{DynamicResource ResourceKey=MahApps.Brushes.Gray5}" />
                                             </Trigger>
                                         </Style.Triggers>
                                     </Style>
@@ -345,12 +354,14 @@
                                 </Rectangle.OpacityMask>
                                 <Rectangle.Style>
                                     <Style TargetType="{x:Type TypeName=Rectangle}">
-                                        <Setter Property="Fill" Value="{DynamicResource ResourceKey=MahApps.Brushes.Gray3}" />
+                                        <Setter Property="Fill"
+                                                Value="{DynamicResource ResourceKey=MahApps.Brushes.Gray3}" />
                                         <Style.Triggers>
                                             <DataTrigger
                                                 Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TypeName=Button}}, Path=IsMouseOver}"
                                                 Value="True">
-                                                <Setter Property="Fill" Value="{DynamicResource ResourceKey=MahApps.Brushes.Gray5}" />
+                                                <Setter Property="Fill"
+                                                        Value="{DynamicResource ResourceKey=MahApps.Brushes.Gray5}" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
@@ -360,7 +371,7 @@
                     </Grid>
                     <ListBox Grid.Column="0" Grid.Row="2" ItemsSource="{Binding Path=Profiles}"
                              Visibility="{Binding Path=IsSearching, Converter={StaticResource ResourceKey=BooleanReverseToVisibilityCollapsedConverter}}"
-                             DisplayMemberPath="Name" SelectedItem="{Binding Path=SelectedProfile}"
+                             SelectedItem="{Binding Path=SelectedProfile}"
                              Style="{StaticResource ResourceKey=ProfileListBox}"
                              ScrollViewer.CanContentScroll="True"
                              VirtualizingPanel.IsVirtualizing="True"
@@ -460,7 +471,8 @@
                                                                                 Visual="{iconPacks:Modern Kind=Edit}" />
                                                                         </Rectangle.OpacityMask>
                                                                         <Rectangle.Style>
-                                                                            <Style TargetType="{x:Type TypeName=Rectangle}">
+                                                                            <Style
+                                                                                TargetType="{x:Type TypeName=Rectangle}">
                                                                                 <Setter Property="Fill"
                                                                                     Value="{DynamicResource ResourceKey=MahApps.Brushes.Gray3}" />
                                                                                 <Style.Triggers>
@@ -491,8 +503,26 @@
                                    BasedOn="{StaticResource ResourceKey=MahApps.Styles.ListBoxItem}">
                                 <Setter Property="ContextMenu" Value="{StaticResource ResourceKey=ProfileContextMenu}" />
                                 <EventSetter Event="MouseDoubleClick" Handler="ListBoxItem_MouseDoubleClick" />
+                                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                             </Style>
                         </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type profiles:ProfileInfo}">
+                                <Grid Background="Transparent">
+                                    <Grid.ToolTip>
+                                        <ToolTip MinWidth="250">
+                                            <StackPanel Margin="10">
+                                                <TextBlock Text="{Binding PingMonitor_Host}" Style="{StaticResource DefaultTextBlock}" />
+                                                <Separator Background="{DynamicResource MahApps.Brushes.Gray8}" Margin="0,10" />
+                                                <TextBlock Text="{Binding Description}" Style="{StaticResource InfoTextBlock}" TextWrapping="Wrap" />
+                                            </StackPanel>
+                                        </ToolTip>                                        
+                                    </Grid.ToolTip>
+                                    <TextBlock Text="{Binding Name}" Style="{StaticResource CenterTextBlock}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
                     </ListBox>
                     <mah:ProgressRing Grid.Row="2" Height="50" Width="50" IsActive="{Binding Path=IsSearching}" />
                     <Grid Grid.Row="2" VerticalAlignment="Center">
@@ -514,7 +544,8 @@
                         </Grid.Style>
                         <Button HorizontalAlignment="Center" Focusable="False">
                             <Button.Style>
-                                <Style TargetType="{x:Type TypeName=Button}" BasedOn="{StaticResource ResourceKey=CleanButton}">
+                                <Style TargetType="{x:Type TypeName=Button}"
+                                       BasedOn="{StaticResource ResourceKey=CleanButton}">
                                     <Setter Property="Command" Value="{Binding Path=AddProfileCommand}" />
 
                                     <Style.Triggers>
@@ -542,8 +573,10 @@
                                     </Rectangle.Resources>
                                     <Rectangle.Style>
                                         <Style TargetType="{x:Type TypeName=Rectangle}">
-                                            <Setter Property="OpacityMask" Value="{StaticResource ResourceKey=VisualPlus}" />
-                                            <Setter Property="Fill" Value="{DynamicResource ResourceKey=MahApps.Brushes.Gray3}" />
+                                            <Setter Property="OpacityMask"
+                                                    Value="{StaticResource ResourceKey=VisualPlus}" />
+                                            <Setter Property="Fill"
+                                                    Value="{DynamicResource ResourceKey=MahApps.Brushes.Gray3}" />
                                             <Style.Triggers>
                                                 <DataTrigger
                                                     Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TypeName=Button}}, Path=IsMouseOver}"
@@ -554,7 +587,8 @@
                                                 <DataTrigger
                                                     Binding="{Binding Path=Search, Converter={StaticResource ResourceKey=StringNullOrEmptyToBoolConverter}}"
                                                     Value="False">
-                                                    <Setter Property="OpacityMask" Value="{StaticResource ResourceKey=VisualClear}" />
+                                                    <Setter Property="OpacityMask"
+                                                            Value="{StaticResource ResourceKey=VisualClear}" />
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
@@ -621,7 +655,8 @@
                                     <Setter Property="Fill" Value="{DynamicResource ResourceKey=MahApps.Brushes.Gray3}" />
                                     <Style.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Fill" Value="{DynamicResource ResourceKey=MahApps.Brushes.Gray5}" />
+                                            <Setter Property="Fill"
+                                                    Value="{DynamicResource ResourceKey=MahApps.Brushes.Gray5}" />
                                         </Trigger>
                                     </Style.Triggers>
                                 </Style>
@@ -648,7 +683,8 @@
                                     </Rectangle.OpacityMask>
                                     <Rectangle.Style>
                                         <Style TargetType="{x:Type TypeName=Rectangle}">
-                                            <Setter Property="Fill" Value="{DynamicResource ResourceKey=MahApps.Brushes.Gray3}" />
+                                            <Setter Property="Fill"
+                                                    Value="{DynamicResource ResourceKey=MahApps.Brushes.Gray3}" />
                                             <Style.Triggers>
                                                 <DataTrigger
                                                     Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TypeName=Button}}, Path=IsMouseOver}"

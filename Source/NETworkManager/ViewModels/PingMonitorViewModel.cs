@@ -11,6 +11,7 @@ using System.Windows.Threading;
 using LiveCharts;
 using LiveCharts.Configurations;
 using LiveCharts.Wpf;
+using log4net;
 using MahApps.Metro.Controls.Dialogs;
 using NETworkManager.Localization.Resources;
 using NETworkManager.Models.Export;
@@ -39,7 +40,7 @@ public class PingMonitorViewModel : ViewModelBase
         IPAddress = host.ipAddress;
         Hostname = host.hostname;
         Group = group;
-        
+
         InitialTimeChart();
 
         ExpandHostView = SettingsManager.Current.PingMonitor_ExpandHostView;
@@ -48,6 +49,7 @@ public class PingMonitorViewModel : ViewModelBase
     #endregion
 
     #region Variables
+    private static readonly ILog Log = LogManager.GetLogger(typeof(PingMonitorViewModel));
 
     private readonly IDialogCoordinator _dialogCoordinator;
     private CancellationTokenSource _cancellationTokenSource;
@@ -101,7 +103,7 @@ public class PingMonitorViewModel : ViewModelBase
             OnPropertyChanged();
         }
     }
-    
+
     private string _group;
 
     public string Group
@@ -412,6 +414,8 @@ public class PingMonitorViewModel : ViewModelBase
                 }
                 catch (Exception ex)
                 {
+                    Log.Error("Error while exporting data as " + instance.FileType, ex);
+                    
                     var settings = AppearanceManager.MetroDialog;
                     settings.AffirmativeButtonText = Strings.OK;
 
